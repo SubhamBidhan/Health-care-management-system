@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Appointments - Smart Healthcare System</title>
+    <link rel="stylesheet" href="" th:href="@{/css/UserAppointment.css}"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"> <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/4.6.0/css/bootstrap.min.css"> 
+    <style>
+        .alert {
+        padding: 15px;
+        margin-bottom: 20px;
+        border: 1px solid transparent;
+        border-radius: 4px;
+        font-family: 'Arial', sans-serif;
+        font-size: 16px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        position: fixed; /* Fixed positioning */
+        top: 20px; 
+        left: 50%; 
+        transform: translateX(-50%); 
+        z-index: 9999; 
+        opacity: 0; 
+        transition: opacity 0.3s ease;
+        width: 80%;
+        max-width: 600px; 
+    }
+    .alert-show {
+        opacity: 1;
+        animation: fadeIn 0.5s ease, fadeOut 0.5s ease 4.5s; 
+    }
+           
+    .alert-success {
+        color: #155724;
+        background-color: #d4edda;
+        border-color: #c3e6cb;
+    }
+    
+    /* Error message styles */
+    .alert-danger {
+        color: #721c24;
+        background-color: #f8d7da;
+        border-color: #f5c6cb;
+    }
+    
+    /* Success icon */
+    .alert-success:before {
+        content: '\2713'; /* Checkmark symbol */
+        font-size: 18px;
+        margin-right: 10px;
+    }
+    
+    /* Error icon */
+    .alert-danger:before {
+        content: '\26A0'; /* Warning symbol */
+        font-size: 18px;
+        margin-right: 10px;
+    }
+    
+      /* Close button */
+    .alert .close {
+        position: absolute;
+        top: 10px;
+        right: 15px;
+        color: inherit;
+        font-size: 20px;
+        cursor: pointer;
+    }
+            /* Flash message hover effects */
+            .alert:hover {
+                box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
+                opacity: 0.95;
+            }
+    
+    
+    
+    
+            .alert-fade-out {
+                opacity: 0;
+                transition: opacity 0.5s ease;
+            }
+    
+    @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+    
+    @keyframes fadeOut {
+        from { opacity: 1; }
+        to { opacity: 0; }
+    }
+        </style>
+    
+</head>
+<body>
+    <div class="dashboard-container">
+        <aside class="sidebar">
+            <div class="logo">
+                <img src="/css/logo2.png" alt="Doctor Logo">
+            </div>
+            <nav>
+                <ul>
+                    <li><a th:href="@{/user/dashboard}" ><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+                    <li><a th:href="@{/user/appointment}" class="active"><i class="fas fa-calendar-alt"></i> Appointments</a></li>
+                    <li><a th:href="@{/user/doctor}"><i class="fas fa-user-md"></i> Doctors</a></li>
+                    <li><a th:href="@{/user/medical-records}"><i class="fas fa-file-medical"></i> Medical Records</a></li>
+                    <li><a th:href="@{/user/UserChangePassword}" ><i class="fas fa-cog"></i> Change Password</a></li>
+                    <li><a href="/logout"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+                </ul>
+            </nav>
+        </aside>
+        
+        <main class="main-content">
+            <header>
+                <h1>Appointments</h1>
+                <p>Manage your appointments efficiently</p>
+            </header>
+
+            <div th:if="${successMessage}" class="alert alert-success alert-show">
+                <p th:text="${successMessage}"></p>
+                <span class="close">&times;</span>
+            </div>
+        
+            <div th:if="${errorMessage}" class="alert alert-danger alert-show">
+                <p th:text="${errorMessage}"></p>
+                <span class="close">&times;</span>
+            </div>
+            
+            <section class="appointment-form">
+                <h2>Create a New Appointment</h2>
+                <form th:action="@{/user/appointments/create}" method="post" class="appointment-form-container">
+                    <input type="hidden" name="redirectUrl" value="/user/appointment">
+
+                    <div class="form-group">
+                        <label for="doctor">Select Doctor:</label>
+                        <select id="doctor" name="doctorId" class="form-control" required>
+                            <option value="" disabled selected>Select a doctor</option>
+                            <option th:each="doctor : ${doctors}" 
+                                    th:value="${doctor.id}" 
+                                    th:text="${doctor.name + ' - ' + doctor.specialization + ' (' + doctor.experience + ')' }"></option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="appointmentDate">Appointment Date:</label>
+                        <input type="date" id="appointmentDate" name="date" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="time">Time:</label>
+                        <input type="time" id="time" name="time" class="form-control" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-lg">Book Appointment</button>
+                </form>
+            </section>
+            
+            
+            <section class="latest-appointments mt-4">
+                <h2>Your Appointments</h2>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Doctor</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="appointment : ${userAppointments}">
+                            <td th:text="${appointment.appointmentDate}"></td>
+                            <td th:text="${appointment.doctor.name}"></td>
+                            <td th:text="${appointment.status}"></td>
+                            <td>
+                                  <!-- Show Cancel button only if the status is 'Scheduled' -->
+                                    <a th:if="${appointment.status == 'Scheduled'}"
+                                    th:href="@{/appointments/cancel/{id}(id=${appointment.id})}" 
+                                    class="btn btn-danger btn-sm">Cancel</a>
+                                
+                                <!-- Show Remove button only if the status is 'Cancelled' -->
+                                      <a th:if="${appointment.status == 'Cancelled'}"
+                                    th:href="@{/appointments/delete/{id}(id=${appointment.id})}" 
+                                    class="btn btn-danger btn-sm">Remove</a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+        </main> 
+    </div>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            var dateInput = document.getElementById('appointmentDate');
+            
+            // Get today's date
+            var today = new Date();
+            
+            // Format today's date to yyyy-mm-dd format
+            var yyyy = today.getFullYear();
+            var mm = String(today.getMonth() + 1).padStart(2, '0'); // Months are zero-indexed
+            var dd = String(today.getDate()).padStart(2, '0');
+        
+            var todayFormatted = yyyy + '-' + mm + '-' + dd;
+            
+            // Add one day to get tomorrow's date
+            var tomorrow = new Date(today);
+            tomorrow.setDate(today.getDate() + 1);
+        
+            var yyyyTomorrow = tomorrow.getFullYear();
+            var mmTomorrow = String(tomorrow.getMonth() + 1).padStart(2, '0');
+            var ddTomorrow = String(tomorrow.getDate()).padStart(2, '0');
+        
+            var tomorrowFormatted = yyyyTomorrow + '-' + mmTomorrow + '-' + ddTomorrow;
+        
+            // Set the min to today's date and max to tomorrow's date
+            dateInput.setAttribute('min', todayFormatted);
+            dateInput.setAttribute('max', tomorrowFormatted);
+            dateInput.setAttribute('value', todayFormatted); // Optionally set default to today
+        });
+    </script>
+    
+    
+    <script>
+        // Automatically close the alert after 5 seconds
+        window.onload = function () {
+            setTimeout(function () {
+                const alerts = document.querySelectorAll('.alert');
+                alerts.forEach(function (alert) {
+                    alert.classList.remove('alert-show'); // Trigger fade-out
+                    setTimeout(() => alert.style.display = 'none', 500); // Hide after fade-out
+                });
+            }, 5000); // 5-second delay before fading out
+        };
+        
+        // Close the alert manually when the close button is clicked
+        document.querySelectorAll('.alert .close').forEach(function (closeBtn) {
+            closeBtn.onclick = function () {
+                this.closest('.alert').classList.remove('alert-show'); // Trigger fade-out
+                setTimeout(() => this.closest('.alert').style.display = 'none', 500); // Hide after fade-out
+            };
+        });
+    </script>   
+    
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/4.6.0/js/bootstrap.min.js"></script>
+</body>
+</html>

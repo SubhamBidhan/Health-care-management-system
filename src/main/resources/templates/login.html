@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Smart Healthcare System</title>
+    <link rel="stylesheet" href="" th:href="@{/css/login.css}"/>
+    <style>
+        /* Root Variables for Consistent Theme */
+        :root {
+            --primary-color: #3498db;
+            --secondary-color: #2c3e50;
+            --accent-color: #1abc9c;
+            --input-bg-color: #ecf0f1;
+            --button-hover-color: #2980b9;
+            --error-color: #e74c3c;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f4f7fc;
+        }
+
+        .login-container {
+            max-width: 450px;
+            margin: 100px auto;
+            padding: 30px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .login-container:hover {
+            transform: scale(1.03);
+        }
+
+        h2 {
+            text-align: center;
+            color: var(--secondary-color);
+            font-weight: 600;
+            margin-bottom: 25px;
+            font-size: 28px;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .input-group label {
+            font-weight: 500;
+            margin-bottom: 8px;
+            color: var(--secondary-color);
+            font-size: 16px;
+        }
+
+        .input-group input {
+            padding: 12px 15px;
+            border: 2px solid transparent;
+            background-color: var(--input-bg-color);
+            border-radius: 10px;
+            font-size: 16px;
+            color: black;
+            transition: border-color 0.3s ease;
+        }
+
+        .input-group input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            background-color: white;
+            box-shadow: 0 0 10px rgba(52, 152, 219, 0.2);
+        }
+        .link-container {
+    display: flex;
+    justify-content: space-between; /* Aligns items to the left and right */
+    align-items: center; /* Aligns them vertically */
+    margin-top: 15px; /* Adds space between the button and the links */
+}
+
+.register-link {
+    white-space: nowrap; /* Prevents text wrapping */
+    text-align: left;
+}
+
+.forgot-password {
+    white-space: nowrap; /* Prevents text wrapping */
+    text-align: left;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    
+}
+
+.forgot-password a,
+.register-link a {
+    color: var(--primary-color);
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+.forgot-password a:hover,
+.register-link a:hover {
+    color: var(--accent-color);
+}
+
+
+        .button-group {
+            text-align: center;
+            margin-top: 20px;
+            margin-bottom: 30px;
+        }
+
+        button {
+            padding: 14px 30px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 30px;
+            font-size: 18px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        button:hover {
+            background-color: var(--button-hover-color);
+            transform: translateY(-2px);
+        }
+
+        /* Logo styling */
+        .logo-container {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .logo-container img {
+            width: 200px;
+            height: auto;
+            opacity: 0.8;
+            transition: opacity 0.3s ease;
+        }
+
+        .logo-container img:hover {
+            opacity: 1;
+        }
+
+        @media (max-width: 768px) {
+            .login-container {
+                padding: 20px;
+                margin: 50px auto;
+            }
+
+            h2 {
+                font-size: 24px;
+            }
+
+            button {
+                font-size: 16px;
+                padding: 12px 20px;
+            }
+        }
+
+        .alert {
+            padding: 15px;
+            margin-bottom: 20px;
+            border: 1px solid transparent;
+            border-radius: 4px;
+            font-family: 'Arial', sans-serif;
+            font-size: 16px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 9999;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            width: 80%;
+            max-width: 600px;
+        }
+
+        .alert-show {
+            opacity: 1;
+            animation: fadeIn 0.5s ease, fadeOut 0.5s ease 4.5s;
+        }
+
+        .alert-success {
+            color: #155724;
+            background-color: #d4edda;
+            border-color: #c3e6cb;
+        }
+
+        .alert-danger {
+            color: #721c24;
+            background-color: #f8d7da;
+            border-color: #f5c6cb;
+        }
+
+        .alert .close {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            color: inherit;
+            font-size: 20px;
+            cursor: pointer;
+        }
+
+        .alert:hover {
+            box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
+            opacity: 0.95;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes fadeOut {
+            from {
+                opacity: 1;
+            }
+            to {
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div th:if="${successMessage}" class="alert alert-success alert-show">
+        <p th:text="${successMessage}"></p>
+        <span class="close">&times;</span>
+    </div>
+
+    <div th:if="${errorMessage}" class="alert alert-danger alert-show">
+        <p th:text="${errorMessage}"></p>
+        <span class="close">&times;</span>
+    </div>
+
+    <div class="login-container">
+        <div class="logo-container">
+            <img src="/css/blood.gif" alt="Doctor Logo" width="100%" />
+        </div>
+
+        <h2>Login</h2>
+
+        <form th:action="@{/login}" method="post">
+            <div class="input-group">
+                <label for="username">Username</label>
+                <input type="text" id="username" name="username" required>
+            </div>
+
+            <div class="input-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+
+            <div class="button-group">
+                <button type="submit">Login</button>
+            </div>
+
+            <div class="link-group">
+                <div class="register-link">
+                    <p>Don't have an account? <a th:href="@{/register}">Register</a></p>
+                </div>
+                <div class="forgot-password">
+                    <a th:href="@{/forgot-password}">Forgot Password?</a>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        // Automatically close the alert after 5 seconds
+        window.onload = function () {
+            setTimeout(function () {
+                const alerts = document.querySelectorAll('.alert');
+                alerts.forEach(function (alert) {
+                    alert.classList.remove('alert-show'); // Trigger fade-out
+                    setTimeout(() => alert.style.display = 'none', 500); // Hide after fade-out
+                });
+            }, 5000); // 5-second delay before fading out
+        };
+
+        // Close the alert manually when the close button is clicked
+        document.querySelectorAll('.alert .close').forEach(function (closeBtn) {
+            closeBtn.onclick = function () {
+                this.closest('.alert').classList.remove('alert-show'); // Trigger fade-out
+                setTimeout(() => this.closest('.alert').style.display = 'none', 500); // Hide after fade-out
+            };
+        });
+    </script>    
+</body>
+</html>

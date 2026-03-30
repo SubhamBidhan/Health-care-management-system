@@ -1,0 +1,282 @@
+body {
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+}
+
+.dashboard-container {
+    display: flex;
+}
+
+.sidebar {
+    background-color: #2c3e50;
+    color: #ecf0f1;
+    width: 250px;
+    height: auto;
+    padding: 20px;
+}
+
+.sidebar .logo {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.sidebar img {
+    width: 100px;
+}
+
+.sidebar nav ul {
+    list-style: none;
+    padding: 0;
+}
+
+.sidebar nav ul li {
+    margin: 15px 0;
+}
+
+.sidebar nav ul li a {
+    color: #ecf0f1;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+}
+
+.sidebar nav ul li a i {
+    margin-right: 10px;
+}
+
+.sidebar nav ul li a.active {
+    background-color: #3498db;
+    border-radius: 5px;
+    padding: 10px;
+}
+
+.main-content {
+    flex: 1;
+    padding: 20px;
+}
+
+header {
+    margin-bottom: 20px;
+}
+
+header h1 {
+    font-size: 24px;
+    color: #333;
+}
+
+header p {
+    color: #777;
+}
+
+/* 1. Center the text of the form heading, darken it, and make it bold */
+.form-container h2 {
+    text-align: center;
+    font-size: 32px;
+    font-weight: bold;
+    color: #2c3e50; /* Darker color */
+    margin-bottom: 30px;
+}
+
+/* 2. Increase the width of the form and center it */
+.form-container {
+    background-color: white;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+    max-width: 900px; /* Increased form width */
+    width: 100%;
+    margin: 0 auto; /* Center the form */
+}
+
+/* 3. Increase the width of all input fields and the select dropdown */
+.form-group input,
+.form-group textarea,
+.form-group select {
+    width: 100%; /* Make the fields fill the form width */
+    max-width: 880px; /* Keep some space for padding inside the form */
+    padding: 12px; /* Increased padding for better appearance */
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+    font-size: 16px;
+    background-color: white; /* Ensure background color consistency */
+    color: #333; /* Ensure text color consistency */
+}
+
+/* Keep the text area height */
+.form-group textarea {
+    height: 120px;
+}
+
+#patient-name1, #patient-sex1{
+  width:100%;
+}
+
+/* Add focus styles to input fields and select */
+.form-group input:focus,
+.form-group textarea:focus,
+.form-group select:focus {
+    border-color: #3498db; /* Consistent focus border color */
+    outline: none;
+}
+
+/* Keep button styles consistent */
+.form-group button {
+    background-color: #3498db;
+    color: white;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 100%; /* Button will also expand fully */
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.form-group button:hover {
+    background-color: #2980b9;
+}
+
+
+/* Add styles for the select input to match other form inputs */
+.form-group select {
+    width: 100%;
+    max-width: 680px;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+    /* Ensure padding is included in the width */
+    background-color: white;
+    /* Make sure the background is consistent */
+    color: #333;
+    font-size: 14px;
+}
+
+#patient-name,#patient-name1,#patient-sex,#patient-sex1{
+  width:100%;
+  max-width:880px;
+}
+.form-group select:focus {
+    border-color: #3498db; /* Consistent focus border color */
+    outline: none;
+}
+
+
+/* Ensure the select label is aligned with other labels */
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    color: #333;
+    font-size: 14px;
+}
+
+.form-group select {
+    max-width: none; /* Ensure it behaves like the other inputs */
+    width: 100%;
+}
+
+/* Add padding for the container to ensure spacing consistency */
+.form-group {
+    margin-bottom: 15px;
+}
+
+.alert {
+    padding: 15px;
+    margin-bottom: 20px;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    font-family: 'Arial', sans-serif;
+    font-size: 16px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    position: fixed;
+    /* Fixed positioning */
+    top: 20px;
+    left: 55%;
+    transform: translateX(-50%);
+    z-index: 9999;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    width: 80%;
+    max-width: 600px;
+}
+
+.alert-show {
+    opacity: 1;
+    animation: fadeIn 0.5s ease, fadeOut 0.5s ease 4.5s;
+}
+
+.alert-success {
+    color: #155724;
+    background-color: #d4edda;
+    border-color: #c3e6cb;
+}
+
+/* Error message styles */
+.alert-danger {
+    color: #721c24;
+    background-color: #f8d7da;
+    border-color: #f5c6cb;
+}
+
+/* Success icon */
+.alert-success:before {
+    content: '\2713';
+    /* Checkmark symbol */
+    font-size: 18px;
+    margin-right: 10px;
+}
+
+/* Error icon */
+.alert-danger:before {
+    content: '\26A0';
+    /* Warning symbol */
+    font-size: 18px;
+    margin-right: 10px;
+}
+
+/* Close button */
+.alert .close {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    color: inherit;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+/* Flash message hover effects */
+.alert:hover {
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
+    opacity: 0.95;
+}
+
+
+
+
+.alert-fade-out {
+    opacity: 0;
+    transition: opacity 0.5s ease;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes fadeOut {
+    from {
+        opacity: 1;
+    }
+
+    to {
+        opacity: 0;
+    }
+}

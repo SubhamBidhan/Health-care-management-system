@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Medical Records - Smart Healthcare System</title>
+    <link rel="stylesheet" href="" th:href="@{/css/userMedicalRecord.css}"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"> <!-- Font Awesome for icons -->
+</head>
+<body>
+    <div class="dashboard-container">
+        <aside class="sidebar">
+            <div class="logo">
+                <img src="/css/logo2.png" alt="Doctor Logo">
+            </div>
+            <nav>
+                <ul>
+                    <li><a th:href="@{/user/dashboard}" ><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+                    <li><a th:href="@{/user/appointment}"><i class="fas fa-calendar-alt"></i> Appointments</a></li>
+                    <li><a th:href="@{/user/doctor}"><i class="fas fa-user-md"></i> Doctors</a></li>
+                    <li><a th:href="@{/user/medical-records}" class="active"><i class="fas fa-file-medical"></i> Medical Records</a></li>
+                    <li><a th:href="@{/user/UserChangePassword}"><i class="fas fa-cog"></i> Change Password</a></li>
+                    <li><a href="/logout"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+                </ul>
+            </nav>
+        </aside>
+        <main class="main-content">
+            <h2>My Prescriptions</h2>
+            <table id="prescriptionTable" border="1" cellspacing="0" cellpadding="10">
+                <thead>
+                    <tr>
+                        <th>Disease</th>
+                        <th>Appointment Status</th>
+                        <th>Doctor Name</th>
+                        <th>Prescription Id</th>
+                        <th>Download</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="prescription : ${prescriptions}">
+                        <td th:text="${prescription.diseases}">Disease Name</td>
+                        <td>Completed</td> <!-- Set status as "Completed" -->
+                        <td th:text="${prescription.doctorName}">Doctor Name</td>
+                        <td th:text="${prescription.id}">Prescription ID</td>
+                        <td>
+                            <a th:href="@{/download-prescription(id=${prescription.id})}" download>
+                                <i class="fas fa-download"></i> Download
+                            </a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </main>
+    </div>
+    <script src="/js/dashboard.js"></script>
+</body>
+</html>

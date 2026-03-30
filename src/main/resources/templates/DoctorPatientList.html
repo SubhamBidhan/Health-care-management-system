@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PatientList- Smart Healthcare System</title>
+    <link rel="stylesheet" href="" th:href="@{/css/UserDoctor.css}"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"> <!-- Font Awesome for icons -->
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+
+        .dashboard-container {
+            display: flex;
+        }
+
+        .sidebar {
+            background-color: #2c3e50;
+            color: #ecf0f1;
+            width: 250px;
+            height: 100vh;
+            padding: 20px;
+        }
+
+        .sidebar .logo {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .sidebar img {
+            width: 100px;
+        }
+
+        .sidebar nav ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .sidebar nav ul li {
+            margin: 15px 0;
+        }
+
+        .sidebar nav ul li a {
+            color: #ecf0f1;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+        }
+
+        .sidebar nav ul li a i {
+            margin-right: 10px;
+        }
+
+        .sidebar nav ul li a.active {
+            background-color: #3498db;
+            border-radius: 5px;
+            padding: 10px;
+        }
+
+        .main-content {
+        flex: 1;
+        padding: 30px;
+        
+        min-height: 100vh;
+    }
+        .content-header {
+        margin-bottom: 20px;
+    }
+
+    .content-header h2 {
+        color: #2c3e50;
+        font-size: 24px;
+        margin: 0;
+    }
+
+    .content-header p {
+        color: #7f8c8d;
+        font-size: 14px;
+        margin-top: 5px;
+    }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        table th, table td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        table th {
+            background-color: #3498db;
+            color: white;
+        }
+
+        table tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        .btn {
+            padding: 8px 12px;
+            margin-right: 5px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .btn-prescribe {
+            background-color: #28a745;
+            color: white;
+        }
+
+        .btn-remove {
+            background-color: #dc3545;
+            color: white;
+        }
+
+        .btn-prescribe:hover {
+            background-color: #218838;
+        }
+
+        .btn-remove:hover {
+            background-color: #c82333;
+        }
+
+        /* Modal Styles */
+       /* Modal Background */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    padding-top: 100px;
+}
+
+/* Modal Content Box */
+.modal-content {
+    background-color: white;
+    margin: auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 40%;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    animation: modalopen 0.4s;
+}
+
+/* Modal Header */
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #e5e5e5;
+    padding-bottom: 10px;
+}
+
+.modal-header h2 {
+    margin: 0;
+    color: #2c3e50;
+}
+
+/* Close Button */
+.close {
+    color: #aaa;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.close:hover {
+    color: #000;
+}
+
+/* Modal Body */
+.modal-body {
+    margin-top: 10px;
+}
+
+.modal-body .form-group {
+    margin-bottom: 15px;
+}
+
+.modal-body .form-group label {
+    display: block;
+    font-weight: bold;
+    color: #333;
+}
+
+.modal-body .form-group input, 
+.modal-body .form-group textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+}
+
+/* Modal Footer */
+.modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 20px;
+}
+
+.modal-footer .btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-left: 10px;
+}
+
+.modal-footer .btn-submit {
+    background-color: #3498db;
+    color: white;
+}
+
+.modal-footer .btn-cancel {
+    background-color: #e74c3c;
+    color: white;
+}
+
+.modal-footer .btn:hover {
+    opacity: 0.9;
+}
+/* Basic Button Styles */
+.btn-submit {
+    background-color: #3498db;  /* Primary color for the button */
+    color: white;               /* Text color */
+    padding: 10px 20px;         /* Padding for the button */
+    font-size: 16px;            /* Font size for the text */
+    border: none;               /* Removes the default border */
+    border-radius: 5px;         /* Rounded corners */
+    cursor: pointer;            /* Pointer cursor on hover */
+    transition: background-color 0.3s ease, transform 0.2s ease; /* Smooth transitions */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Slight shadow for a 3D effect */
+}
+
+/* Hover Effect */
+.btn-submit:hover {
+    background-color: #2980b9;  /* Darker shade on hover */
+    transform: translateY(-2px); /* Lift the button slightly */
+}
+
+/* Focus Effect */
+.btn-submit:focus {
+    outline: none;              /* Removes the default focus outline */
+    box-shadow: 0 0 8px rgba(52, 152, 219, 0.8); /* Adds a glow effect when focused */
+}
+
+/* Active Effect */
+.btn-submit:active {
+    background-color: #1f6391;  /* Darker color when clicked */
+    transform: translateY(0);   /* Button goes back to normal position */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Reduced shadow */
+}
+
+
+/* Modal Animation */
+@keyframes modalopen {
+    from {
+        transform: scale(0.7);
+        opacity: 0;
+    }
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <aside class="sidebar">
+            <div class="logo">
+                <img src="/css/logo2.png" alt="Doctor Logo">
+            </div>
+            <nav>
+                <ul>
+                    <li><a th:href="@{/doctor/dashboard}" ><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+                    <li><a th:href="@{/doctor/appointments}"><i class="fas fa-calendar-alt"></i> Appointments</a></li>
+                    <li><a th:href="@{/doctor/patients}" class="active"><i class="fas fa-user-md"></i> Patients</a></li>
+                    <li><a th:href="@{/doctor/Prescription}"><i class="fas fa-file-medical"></i> Prescription</a></li>
+                    <li><a th:href="@{/doctor/passwordChange}"><i class="fas fa-cog"></i> Password Change</a></li>
+                    <li><a href="/logout"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+                </ul>
+            </nav>
+        </aside>
+        <main class="main-content">
+            <div class="content-header">
+                <h2>Patient Management</h2>
+                <p>Manage all registered Patient's in the system.</p>
+            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Patient Name</th>
+                        <th>Contact number</th>
+                        <th>Email</th>
+                        
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="patient : ${patients}">
+                        <td th:text="${patient.fullName}">Patient Name</td>
+                        <td th:text="${patient.contactNumber}">Contact number</td>
+                        <td th:text="${patient.email}">Email</td>
+                        
+                    </tr>
+                </tbody>
+                
+            </table>
+
+            <!-- Modal for prescribing -->
+            <div id="prescribeModal" class="modal">
+                <div class="modal-content">
+                    <span class="close" onclick="closeModal()">&times;</span>
+                    <h2>Prescribe Medicine</h2>
+                    <form id="prescribeForm">
+                        <label for="medicine">Enter Prescription</label>
+                        <textarea id="medicine" rows="4" style="width: 100%;"></textarea>
+                        <button type="button" class="btn-submit" onclick="submitPrescription()">Submit Prescription</button>
+                    </form>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Function to open the prescription modal
+        function openPrescribeModal(button) {
+            const modal = document.getElementById("prescribeModal");
+            modal.style.display = "block";
+            // You can pass patient information to the modal via data attributes if necessary
+        }
+
+        // Function to close the modal
+        function closeModal() {
+            document.getElementById("prescribeModal").style.display = "none";
+        }
+
+        // Function to remove a patient row
+        function removePatient(button) {
+            if (confirm("Are you sure you want to remove this patient?")) {
+                const row = button.closest("tr");
+                row.parentNode.removeChild(row);
+            }
+        }
+
+        // Function to submit the prescription (you can expand this)
+        function submitPrescription() {
+            alert("Prescription submitted successfully!");
+            closeModal(); // Close the modal after submission
+        }
+
+        // Close the modal if clicked outside of it
+        window.onclick = function(event) {
+            const modal = document.getElementById("prescribeModal");
+            if (event.target === modal) {
+                modal.style.display = "none";
+            }
+        }
+    </script>
+</body>
+</html>

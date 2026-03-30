@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Doctor Dashboard - Smart Healthcare System</title>
+    <link rel="stylesheet" href="" th:href="@{/css/DoctorDashboard.css}"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"> <!-- Font Awesome for icons -->
+    <style>
+        /* You can add custom styles here */
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <aside class="sidebar">
+            <div class="logo">
+                <img src="/css/logo2.png" alt="Doctor Logo">
+            </div>
+            <nav>
+                <ul>
+                    <li><a th:href="@{/doctor/dashboard}" class="active"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+                    <li><a th:href="@{/doctor/appointments}"><i class="fas fa-calendar-alt"></i> Appointments</a></li>
+                    <li><a th:href="@{/doctor/patients}"><i class="fas fa-user-md"></i> Patients</a></li>
+                    <li><a th:href="@{/doctor/Prescription}"><i class="fas fa-file-medical"></i> Prescription</a></li>
+                    <li><a th:href="@{/doctor/passwordChange}"><i class="fas fa-cog"></i> Password Change</a></li>
+                    <li><a href="/logout"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+                </ul>
+            </nav>
+        </aside>
+        
+        <main class="main-content">
+            <header>
+                <h1>Welcome, <span th:text="${doctor.name}">Doctor's Name</span></h1>
+                <p>Your management dashboard</p>
+            </header>
+
+            <section class="stats">
+                <div class="stat-box">
+                    <h3>Patients</h3>
+                    <p th:text="${totalPatients}">0 Total Patients</p>
+                </div>
+                <div class="stat-box">
+                    <h3>Appointments</h3>
+                    <p th:text="${totalAppointments}">0 Upcoming</p>
+                </div>
+                <div class="stat-box">
+                    <h3>Medical Records</h3>
+                    <p th:text="${totalPrescription}">0 Records</p>
+                </div>
+            </section>
+
+            <section class="latest-appointments">
+                <h2>Latest Appointments</h2>
+                <div class="appointments-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Patient</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="appointment : ${appointments}">
+                                <td th:text="${appointment.appointmentDate}">Oct 10, 2024</td>
+                                <td th:text="${appointment.patient.username}">John Doe</td>
+                                <td th:text="${appointment.status}" class="status-cell">
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </main>
+    </div>
+</body>
+</html>

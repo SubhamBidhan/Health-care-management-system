@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Doctor Appointment - Smart Healthcare System</title>
+    <link rel="stylesheet" href="" th:href="@{/css/DoctorAppointment.css}"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* Add some simple styling for the modal */
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <aside class="sidebar">
+            <div class="logo">
+                <img src="/css/logo2.png" alt="Doctor Logo">
+            </div>
+            <nav>
+                <ul>
+                    <li><a th:href="@{/doctor/dashboard}"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+                    <li><a th:href="@{/doctor/appointments}" class="active"><i class="fas fa-calendar-alt"></i> Appointments</a></li>
+                    <li><a th:href="@{/doctor/patients}"><i class="fas fa-user-md"></i> Patients</a></li>
+                    <li><a th:href="@{/doctor/Prescription}"><i class="fas fa-file-medical"></i> Prescription</a></li>
+                    <li><a th:href="@{/doctor/passwordChange}"><i class="fas fa-cog"></i> Password Change</a></li>
+                    <li><a href="/logout"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+                </ul>
+            </nav>
+        </aside>
+        <main class="main-content">
+            <h2>Today's Appointments</h2>
+            <table id="today-patientTable">
+                <thead>
+                    <tr>
+                        <th>Patient Name</th>
+                        <th>Date</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                        <th>Scheduled Meety</th>
+                        <th>Meet Link</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="todayappointment : ${todaysAppointments}" data-appointment-id="${todayappointment.id}">
+                        <td th:text="${todayappointment.patient.fullName}">Patient Name</td>
+                        <td th:text="${todayappointment.appointmentDate}">Date</td>
+                        <td th:text="${todayappointment.status}" class="status-cell">Status</td>
+                        <td>
+                            <button class="completed-btn" th:onclick="'markAppointmentCompleted(this, ' + ${todayappointment.id} + ')'">Completed</button>
+                            <button class="scheduled-btn" th:onclick="'openRescheduleModal(' + ${todayappointment.id} + ')'">Reschedule</button>
+                        </td>
+                        <td>
+                            <a href="#" class="Scheduled" th:onclick="'ScheduledMeet(this,' + ${todayappointment.id} + ')'">Scheduled meet</a>
+                        </td>
+                        
+                        <td>
+                            <a href="#" class="meet-link" th:onclick="'JoinMeet(this,' + ${todayappointment.id} + ')'">Join meet</a>
+                        </td>
+                        
+                    </tr>
+                </tbody>
+            </table>
+        
+            <h2>Future Appointments</h2>
+            <table id="patientTable">
+                <thead>
+                    <tr>
+                        <th>Patient Name</th>
+                        <th>Date</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="appointment : ${appointments}">
+                        <td th:text="${appointment.patient.fullName}">Patient Name</td>
+                        <td th:text="${appointment.appointmentDate}">Date</td>
+                        <td th:text="${appointment.status}">Status</td>
+                    </tr>
+                </tbody>
+            </table>
+        </main>
+    </div>
+
+    <div id="rescheduleModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4>Reschedule Appointment</h4>
+            </div>
+            <form id="rescheduleForm" method="post" action="/doctor/appointments/reschedule">
+                <input type="hidden" id="appointmentId" name="appointmentId">
+                <div>
+                    <label for="newDate">Select New Date:</label>
+                    <input type="date" id="newDate" name="newDate" required>
+                </div>
+                <div>
+                    <label for="newTime">Select New Time:</label>
+                    <input type="time" id="newTime" name="newTime" required>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit">Submit</button>
+                    <button type="button" onclick="closeRescheduleModal()">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div id="scheduleModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4>Schedule Meet</h4>
+            </div>
+            <form id="scheduleForm" method="post" action="#">
+                <input type="hidden" id="scheduleAppointmentId" name="scheduleAppointmentId">
+                <div>
+                    <label for="scheduleTime">Select Time:</label>
+                    <input type="time" id="scheduleTime" name="scheduleTime" required>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit">Submit</button>
+                    <button type="button" onclick="closeScheduleModal()">Cancel</button>
+                </div>
+                <div id="spinner" style="display: none;">
+                    <i class="fas fa-spinner fa-spin"></i> Sending Email...
+                </div>
+            </form>
+        </div>
+    </div>
+ 
+    
+    <script>
+        function ScheduledMeet(button, appointmentId) {
+            document.getElementById("scheduleAppointmentId").value = appointmentId; // Set the appointment ID
+            document.getElementById("scheduleModal").style.display = "block"; // Open the modal
+            const spinner = document.getElementById("spinner");
+        }
+    
+        function closeScheduleModal() {
+            document.getElementById("scheduleModal").style.display = "none"; // Close the modal
+        }
+        
+        document.getElementById("scheduleForm").onsubmit = function(event) {
+            spinner.style.display = "block";
+            event.preventDefault(); // Prevent the default form submission
+    
+            const appointmentId = document.getElementById("scheduleAppointmentId").value;
+            const time = document.getElementById("scheduleTime").value;
+    
+            fetch(`/doctor/ScheduledMeet/${appointmentId}?time=${time}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => response.text())
+        .then(data => {
+            console.log(data); // Log the response
+            alert('Meeting scheduled successfully!'); // Show success alert
+            closeScheduleModal(); // Close the modal after scheduling
+        })
+        .catch(error => {
+            console.error('Error scheduling meeting:', error);
+            alert('Failed to schedule meeting.');
+        })
+        .finally(() => {
+            // Hide the spinner after processing is done
+            spinner.style.display = "none";
+        });
+        };
+    </script>
+    <script>    
+       function JoinMeet(button, appointmentId) {
+        
+        
+        window.location.href = "/doctor/meet?appointmentId=" + appointmentId;
+}
+
+       
+    </script>
+    
+    
+    <script>
+        function markAppointmentCompleted(button, id) {
+            const row = button.closest('tr');
+            
+            button.innerText = 'Completed';
+            button.disabled = true;
+            row.querySelector('.status-cell').innerText = 'Completed'; // Update the status in the UI
+            row.style.opacity = '0.5'; // Visually indicate completion
+
+            setTimeout(() => {
+                fetch(`/doctor/appointments/${id}/complete`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                })
+                .then(response => {
+                    if (response.ok) {
+                        row.remove(); // Remove the row from the table
+                    } else {
+                        console.error('Failed to complete the appointment');
+                        button.innerText = 'Completed';
+                        button.disabled = false;
+                        row.style.opacity = '1'; // Reset opacity
+                    }
+                })
+                .catch(error => {
+                    console.error('Error updating appointment status:', error);
+                    button.innerText = 'Completed';
+                    button.disabled = false;
+                    row.style.opacity = '1'; // Reset opacity
+                });
+            }, 1000);
+        }
+    </script>
+
+    <script>
+        function openRescheduleModal(appointmentId) {
+            document.getElementById("appointmentId").value = appointmentId;
+            document.getElementById("rescheduleModal").style.display = "block";
+        }
+
+        function closeRescheduleModal() {
+            document.getElementById("rescheduleModal").style.display = "none";
+        }
+
+        window.onclick = function(event) {
+            var modal = document.getElementById("rescheduleModal");
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
+    </script>
+</body>
+</html>

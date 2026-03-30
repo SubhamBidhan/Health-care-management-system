@@ -1,0 +1,62 @@
+<html>
+<head>
+    <style>
+        #root {
+            width: 100vw;
+            height: 100vh;
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+</body>
+<script src="https://unpkg.com/@zegocloud/zego-uikit-prebuilt/zego-uikit-prebuilt.js"></script>
+<script>
+window.onload = function () {
+    function getUrlParams(url) {
+        let urlStr = url.split('?')[1];
+        const urlSearchParams = new URLSearchParams(urlStr);
+        const result = Object.fromEntries(urlSearchParams.entries());
+        return result;
+    }
+
+    // Prompt the user for their username until a valid name is entered
+    let userName;
+    do {
+        userName = prompt("Please enter your name:");
+    } while (!userName); // Loop until a valid name is entered
+
+    // Retrieve the appointment ID from the URL and use it as the room ID
+    const roomID = getUrlParams(window.location.href)['appointmentId'] || (Math.floor(Math.random() * 10000) + "");
+    const userID = Math.floor(Math.random() * 10000) + "";
+    const appID = 282500304;
+    const serverSecret = "22e6b1fac82e5cf8a0cd2b742e40e315";
+    
+    // Generate a Kit Token using the appointment ID as the room ID
+    const kitToken = ZegoUIKitPrebuilt.generateKitTokenForTest(appID, serverSecret, roomID, userID, userName);
+
+    const zp = ZegoUIKitPrebuilt.create(kitToken);
+    zp.joinRoom({
+        container: document.querySelector("#root"),
+        sharedLinks: [{
+            name: 'Personal link',
+            url: window.location.protocol + '//' + window.location.host + window.location.pathname + '?appointmentId=' + roomID,
+        }],
+        scenario: {
+            mode: ZegoUIKitPrebuilt.VideoConference,
+        },
+        turnOnMicrophoneWhenJoining: true,
+        turnOnCameraWhenJoining: true,
+        showMyCameraToggleButton: true,
+        showMyMicrophoneToggleButton: true,
+        showAudioVideoSettingsButton: true,
+        showScreenSharingButton: true,
+        showTextChat: true,
+        showUserList: true,
+        maxUsers: 2,
+        layout: "Auto",
+        showLayoutButton: false,
+    });
+}
+</script>
+</html>

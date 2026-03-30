@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Smart Healthcare System</title>
+    <link rel="stylesheet" href="" th:href="@{/css/AdminDashborad.css}"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"> <!-- Font Awesome for icons -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> <!-- For charts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script> <!-- For animated counters -->
+    <style>
+        .charts {
+            display: flex;
+            justify-content: space-between;
+            width: 90%;
+            margin-top: 20px;
+        }
+
+        .chart {
+            background-color: #ffffff;
+            border-radius: 12px;
+            padding: 20px;
+            width: 48%;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .chart h3 {
+            font-size: 18px;
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        canvas#myBarChart {
+            width: 100%;
+            height: 500px; /* Increased height for the bar chart */
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <aside class="sidebar">
+            <div class="logo">
+                <img src="/css/logo2.png" alt="Doctor Logo">
+            </div>
+            <nav>
+                <ul>
+                    <li><a th:href="@{/admin/dashboard}" class="active"><i class="fas fa-tachometer-alt"></i>Dashboard</a></li>
+                    <li><a th:href="@{/admin/allusers}"><i class="fas fa-users"></i>Patients</a></li>
+                    <li><a th:href="@{/admin/allDoctors}"><i class="fas fa-user-md"></i>Doctors</a></li>
+                    <li><a th:href="@{/admin/AppointmentList}"><i class="fas fa-calendar-alt"></i>Appointments</a></li>
+                    <li><a th:href="@{/admin/changePassword}"><i class="fas fa-cogs"></i>Settings</a></li>
+                    <li><a href="/logout"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <main class="main-content">
+            <header>
+                <h1>Welcome Back, Admin!</h1>
+                <p>Here's an overview of your dashboard.</p>
+            </header>
+
+            <div class="stats">
+                <div class="stat-box">
+                    <h3 class="counter" th:text="${allusers}" id="allusers">0</h3> <!-- Populate from model -->
+                    <p>Registered Users</p>
+                </div>
+                <div class="stat-box">
+                    <h3 class="counter" th:text="${allDoctors}" id="allDoctors">0</h3> <!-- Populate from model -->
+                    <p>Registered Doctors</p>
+                </div>
+                <div class="stat-box">
+                    <h3 class="counter" th:text="${totalAppointments}" id="totalAppointments">0</h3> <!-- Populate from model -->
+                    <p>Appointments Scheduled</p>
+                </div>
+            </div>
+
+            <section class="chart-container">
+                <h2>Appointments Overview</h2>
+                <div class="chart-wrapper">
+                    <canvas id="appointmentsChart"></canvas>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script th:inline="javascript">
+        document.addEventListener('DOMContentLoaded', () => {
+            const duration = 1000;
+            const allusers = /*[[${allusers}]]*/ 0; 
+            const allDoctors = /*[[${allDoctors}]]*/ 0; 
+            const totalAppointments = /*[[${totalAppointments}]]*/ 0; 
+    
+          
+            function animateCounter(element, targetNumber, duration) {
+                let start = 0; 
+                const incrementTime = duration / targetNumber; // Time between increments
+                const interval = setInterval(() => {
+                    start++;
+                    element.innerText = start;
+                    if (start === targetNumber) {
+                        clearInterval(interval); 
+                    }
+                }, incrementTime);
+            }
+    
+            // Call the animateCounter function for each count
+            animateCounter(document.getElementById('allusers'), allusers, duration);
+            animateCounter(document.getElementById('allDoctors'), allDoctors, duration);
+            animateCounter(document.getElementById('totalAppointments'), totalAppointments, duration);
+        });
+
+        // Chart for Appointments Overview
+        const ctx = document.getElementById('appointmentsChart').getContext('2d');
+        const TotalAppointmentByMonth = /*[[${monthlyCounts}]]*/ {}; // Injected monthly data
+    
+        const myBarChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: Object.keys(TotalAppointmentByMonth), // Extract keys as labels
+                datasets: [{
+                    label: 'Appointment Summary',
+                    data: Object.values(TotalAppointmentByMonth), // Extract values as data points
+                    backgroundColor: function(context) {
+                        const chart = context.chart;
+                        const { ctx, chartArea } = chart;
+    
+                        if (!chartArea) {
+                            return null;
+                        }
+    
+                        // Create gradient background
+                        const gradient = ctx.createLinearGradient(0, chartArea.top, 0, chartArea.bottom);
+                        gradient.addColorStop(0, 'rgba(255, 99, 132, 0.5)');
+                        gradient.addColorStop(1, 'rgba(54, 162, 235, 0.5)');
+                        return gradient;
+                    },
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 2,
+                    hoverBackgroundColor: '#ff6384',
+                    hoverBorderColor: '#333',
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        grid: {
+                            display: false,
+                        },
+                        ticks: {
+                            color: '#333',
+                        }
+                    },
+                    x: {
+                        grid: {
+                            display: false,
+                        },
+                        ticks: {
+                            color: '#333',
+                        }
+                    }
+                },
+                responsive: true,
+                plugins: {
+                    legend: {
+                        display: false,
+                    },
+                    tooltip: {
+                        backgroundColor: '#333',
+                        titleColor: '#fff',
+                        bodyColor: '#fff',
+                        borderColor: '#ff5722',
+                        borderWidth: 1,
+                    },
+                    title: {
+                        display: true,
+                        text: 'Monthly Appointment Summary',
+                        color: '#333',
+                        font: {
+                            size: 18
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>

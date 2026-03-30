@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Doctor List - Smart Healthcare System</title>
+    <link rel="stylesheet" href="" th:href="@{/css/UserDoctor.css}" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- Font Awesome for icons -->
+    <style>
+        /* Add your CSS styles here */
+    </style>
+</head>
+
+<body>
+    <div class="dashboard-container">
+        <aside class="sidebar">
+            <div class="logo">
+                <img src="/css/logo2.png" alt="Doctor Logo">
+            </div>
+            <nav>
+                <ul>
+                    <li><a th:href="@{/user/dashboard}"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+                    <li><a th:href="@{/user/appointment}"><i class="fas fa-calendar-alt"></i> Appointments</a></li>
+                    <li><a th:href="@{/user/doctor}" class="active"><i class="fas fa-user-md"></i> Doctors</a></li>
+                    <li><a th:href="@{/user/medical-records}"><i class="fas fa-file-medical"></i> Medical Records</a>
+                    </li>
+                    <li><a th:href="@{/user/UserChangePassword}"><i class="fas fa-cog"></i> Change Password</a></li>
+                    <li><a href="/logout"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+                </ul>
+            </nav>
+        </aside>
+        <main class="main-content">
+            <div th:if="${successMessage != null and !successMessage.isEmpty()}" class="alert alert-success alert-show">
+                <p th:text="${successMessage}"></p>
+                <span class="close">&times;</span>
+            </div>
+            
+            <div th:if="${errorMessage != null and !errorMessage.isEmpty()}" class="alert alert-danger alert-show">
+                <p th:text="${errorMessage}"></p>
+                <span class="close">&times;</span>
+            </div>
+            
+            <div class="cards-container">
+                <div th:each="doctor : ${doctors}" class="card" th:data-doctor-id="${doctor.id}"
+                    th:data-name="${doctor.name}">
+                    <i class="fas fa-user-md profile-icon"></i>
+                    <div class="doctor-info">
+                        <h3 class="doctor-name" th:text="${doctor.name}">Dr. John Doe</h3>
+                        <p class="doctor-specialization" th:text="'Specialization: ' + ${doctor.specialization}">
+                            Specialization: Cardiologist</p>
+                        <p class="doctor-phone" th:text="'Phone: ' + ${doctor.contactNumber}">Phone: 9855648795</p>
+                        <p class="slots" th:text="'Slots available: ' + ${doctor.slots}">Slots available: 9</p>
+
+                        <!-- The button with inline event to open the modal -->
+                        <button class="book-btn" onclick="openAppointmentModal(this)">Book Appointment</button>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Modal for booking appointment -->
+        <!-- Appointment Modal -->
+        <div class="modal" id="appointmentModal">
+            <div class="modal-content">
+                <span class="close-btn" onclick="closeAppointmentModal()">&times;</span>
+                <h2 style="text-align: center;">Book Appointment</h2>
+                <form id="addUserForm" action="/user/appointments/create" method="post">
+                    <div class="appointment-form-container">
+                        <div class="form-group">
+                            <label for="doctor-name">Doctor's Name:</label>
+                            <input type="text" id="doctor-name" class="form-control" readonly>
+                        </div>
+                        <input type="hidden" id="doctor-id" name="doctorId" class="form-control" required>
+                        <input type="hidden" name="redirectUrl" value="/user/doctor">
+                
+                        <div class="form-group">
+                            <label for="patient-name">Patient Name:</label>
+                            <input type="text" id="patient-name" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="appointment-date">Date:</label>
+                            <input type="date" id="appointment-date" name="date" class="form-control" required>
+                        </div>
+                
+                        <div class="form-group">
+                            <label for="appointment-time">Time:</label>
+                            <input type="time" id="appointment-time" name="time" class="form-control" required>
+                        </div>
+                
+                        <button class="btn-primary" style="width: 100%;">Submit</button>
+                    </div>
+                </form>
+                
+            </div>
+        </div>
+
+
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                var dateInput = document.getElementById('appointment-date');
+
+                // Get today's date
+                var today = new Date();
+
+                // Format today's date to yyyy-mm-dd format
+                var yyyy = today.getFullYear();
+                var mm = String(today.getMonth() + 1).padStart(2, '0'); // Months are zero-indexed
+                var dd = String(today.getDate()).padStart(2, '0');
+
+                var todayFormatted = yyyy + '-' + mm + '-' + dd;
+
+                // Add one day to get tomorrow's date
+                var tomorrow = new Date(today);
+                tomorrow.setDate(today.getDate() + 1);
+
+                var yyyyTomorrow = tomorrow.getFullYear();
+                var mmTomorrow = String(tomorrow.getMonth() + 1).padStart(2, '0');
+                var ddTomorrow = String(tomorrow.getDate()).padStart(2, '0');
+
+                var tomorrowFormatted = yyyyTomorrow + '-' + mmTomorrow + '-' + ddTomorrow;
+
+                // Set the min to today's date and max to tomorrow's date
+                dateInput.setAttribute('min', todayFormatted);
+                dateInput.setAttribute('max', tomorrowFormatted);
+                dateInput.setAttribute('value', todayFormatted); // Optionally set default to today
+            });
+        </script>
+
+        <script>
+            // Automatically close the alert after 5 seconds
+           // Automatically close the alert after 5 seconds
+window.onload = function () {
+    setTimeout(function () {
+        const alerts = document.querySelectorAll('.alert');
+        alerts.forEach(function (alert) {
+            alert.classList.remove('alert-show'); // Trigger fade-out
+            setTimeout(() => alert.style.display = 'none', 500); // Hide after fade-out
+        });
+    }, 5000); // 5-second delay before fading out
+};
+
+// Close the alert manually when the close button is clicked
+document.querySelectorAll('.alert .close').forEach(function (closeBtn) {
+    closeBtn.onclick = function () {
+        this.closest('.alert').classList.remove('alert-show'); // Trigger fade-out
+        setTimeout(() => this.closest('.alert').style.display = 'none', 500); // Hide after fade-out
+    };
+});
+
+        </script>
+
+
+
+        <script>
+            function openAppointmentModal(button) {
+                const doctorId = button.closest('.card').getAttribute('data-doctor-id');
+                const doctorName = button.closest('.card').getAttribute('data-name');
+
+                document.getElementById('doctor-id').value = doctorId;
+                document.getElementById('doctor-name').value = doctorName;
+
+                // Show the modal
+                document.getElementById('appointmentModal').style.display = 'flex';
+            }
+
+            function closeAppointmentModal() {
+                document.getElementById('appointmentModal').style.display = 'none';
+            }
+
+            // Close the modal if clicking outside the modal content
+            window.onclick = function (event) {
+                const modal = document.getElementById('appointmentModal');
+                if (event.target == modal) {
+                    closeAppointmentModal();
+                }
+            };
+
+
+        </script>
+
+
+
+</body>
+
+</html>

@@ -1,0 +1,335 @@
+        /* CSS for layout */
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        
+        .dashboard-container {
+            display: flex;
+        }
+        
+        .sidebar {
+            background-color: #2c3e50;
+            color: #ecf0f1;
+            width: 250px;
+            height: auto;
+            padding: 20px;
+        }
+        
+        .sidebar .logo {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .sidebar img {
+            width: 100px;
+        }
+        
+        .sidebar nav ul {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .sidebar nav ul li {
+            margin: 15px 0;
+        }
+        
+        .sidebar nav ul li a {
+            color: #ecf0f1;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+        }
+        
+        .sidebar nav ul li a i {
+            margin-right: 10px;
+        }
+        
+        .sidebar nav ul li a.active {
+            background-color: #3498db;
+            border-radius: 5px;
+            padding: 10px;
+        }
+        
+        .bounce {
+            animation: bounce 0.5s ease;
+        }
+        
+        @keyframes bounce {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+        
+                .main-content {
+                    flex: 1;
+                    padding: 20px;
+                }
+                header {
+                    margin-bottom: 20px;
+                }
+                header h1 {
+                    font-size: 24px;
+                    color: #333;
+                }
+                header p {
+                    color: #777;
+                }
+        
+                /* Form styling */
+                .form-container {
+                    background-color: white;
+                    padding: 20px;
+                    margin-bottom: 20px;
+                    border-radius: 5px;
+                    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+                }
+                .form-container h2 {
+                    margin-bottom: 20px;
+                    font-size: 22px;
+                    color: #333;
+                }
+                .form-container label {
+                    display: block;
+                    margin-bottom: 5px;
+                    color: #555;
+                }
+                .form-container input, .form-container select {
+                    width: 100%;
+                    padding: 10px;
+                    margin-bottom: 15px;
+                    border-radius: 5px;
+                    border: 1px solid #ddd;
+                }
+                .form-container button {
+                    background-color: #3498db;
+                    color: white;
+                    padding: 10px;
+                    border: none;
+                    border-radius: 5px;
+                    cursor: pointer;
+                }
+                .form-container button:hover {
+                    background-color: #2980b9;
+                }
+        
+                /* Table styling */
+                table {
+                    width: 100%;
+                    background-color: white;
+                    border-collapse: collapse;
+                    text-align: left;
+                    margin-top: 20px;
+                    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+                }
+                table th, table td {
+                    padding: 10px;
+                    border: 1px solid #ddd;
+                }
+                table thead {
+                    background-color: #2c3e50;
+                    color: white;
+                }
+                .edit, .delete {
+                    padding: 8px 12px;
+                    border: none;
+                    border-radius: 5px;
+                    cursor: pointer;
+                    transition: background-color 0.3s ease, transform 0.3s ease; /* Add transition for hover effects */
+                }
+                
+                .edit {
+                    background-color: #3498db; /* Blue color for edit button */
+                    color: white;
+                }
+                
+                .edit:hover {
+                    background-color: #2980b9; /* Darker blue on hover */
+                    transform: scale(1.05); /* Slightly enlarge on hover */
+                }
+                
+                .delete{
+                    background-color: #e74c3c; /* Red color for delete button */
+                    color: white;
+                }
+                
+                .delete:hover {
+                    background-color: #c0392b; /* Darker red on hover */
+                    transform: scale(1.05); /* Slightly enlarge on hover */
+                }
+        
+                .modal {
+                    display: none;
+                    position: fixed;
+                    z-index: 1;
+                    left: 0;
+                    top: 0;
+                    width: 100%;
+                    height: 100%;
+                    background-color: rgba(0, 0, 0, 0.5);
+                }
+                .modal-content {
+                    background-color: white;
+                    margin: 10% auto;
+                    padding: 20px;
+                    border-radius: 10px;
+                    width: 80%;
+                    max-width: 700px;
+                }
+        
+        
+        .close {
+            position: absolute; /* Position the close button */
+            right: 15px; /* Distance from the right */
+            top: 15px; /* Distance from the top */
+            color: #aaa; /* Light color for close button */
+            font-size: 24px; /* Font size */
+            font-weight: bold; /* Bold font */
+            cursor: pointer; /* Cursor pointer on hover */
+        }
+        
+        .close:hover,
+        .close:focus {
+            color: black; /* Darker color on hover */
+            text-decoration: none; /* Remove underline */
+            cursor: pointer; /* Pointer cursor */
+        }
+        
+        /* Ensure modal inputs look consistent */
+        .modal-content input, 
+        .modal-content select {
+            width:100%; /* Full width inputs */
+            padding: 10px; /* Padding */
+            margin-bottom: 15px; /* Spacing between inputs */
+            border: 1px solid #ddd; /* Light border */
+            border-radius: 5px; /* Rounded edges */
+        }
+        
+        /* Style for the save changes button in the modal */
+        .modal-content button {
+            background-color: #3498db; /* Button color */
+            color: white; /* Text color */
+            padding: 10px; /* Padding */
+            border: none; /* No border */
+            border-radius: 5px; /* Rounded edges */
+            cursor: pointer; /* Pointer cursor on hover */
+            width: 100%; /* Full width */
+        }
+        
+        .modal-content button:hover {
+            background-color: #2980b9; /* Darker blue on hover */
+        }
+        /* Ensure inputs fit within the container */
+        .form-container input, 
+        .form-container select, 
+        .modal-content input, 
+        .modal-content select {
+            width: 100%; /* Full width but respecting the container padding */
+            max-width: 100%; /* Ensure it doesn't exceed the container's width */
+            box-sizing: border-box; /* Include padding and border in the element's total width/height */
+            padding: 10px;
+            margin-bottom: 15px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+        }
+        
+        /* Adjust the phone number fields to fit properly */
+        .form-container #doctorPhone, 
+        .modal-content #editDoctorPhone {
+            flex: 1; /* Ensure it takes up available space */
+            margin-left: 10px; /* Add space between country code and input */
+        }
+        
+        /* Fix the width of the country code dropdown */
+        .form-container #countryCode, 
+        .modal-content #editCountryCode {
+            width: 30%; /* A reasonable width for country code */
+        }
+        .alert {
+            padding: 15px;
+            margin-bottom: 20px;
+            border: 1px solid transparent;
+            border-radius: 4px;
+            font-family: 'Arial', sans-serif;
+            font-size: 16px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            position: fixed; /* Fixed positioning */
+            top: 20px; 
+            left: 50%; 
+            transform: translateX(-50%); 
+            z-index: 9999; 
+            opacity: 0; 
+            transition: opacity 0.3s ease;
+            width: 80%;
+            max-width: 600px; 
+        }
+        .alert-show {
+            opacity: 1;
+            animation: fadeIn 0.5s ease, fadeOut 0.5s ease 4.5s; 
+        }
+               
+        .alert-success {
+            color: #155724;
+            background-color: #d4edda;
+            border-color: #c3e6cb;
+        }
+        
+        /* Error message styles */
+        .alert-danger {
+            color: #721c24;
+            background-color: #f8d7da;
+            border-color: #f5c6cb;
+        }
+        
+        /* Success icon */
+        .alert-success:before {
+            content: '\2713'; /* Checkmark symbol */
+            font-size: 18px;
+            margin-right: 10px;
+        }
+        
+        /* Error icon */
+        .alert-danger:before {
+            content: '\26A0'; /* Warning symbol */
+            font-size: 18px;
+            margin-right: 10px;
+        }
+        
+          /* Close button */
+        .alert .close {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            color: inherit;
+            font-size: 20px;
+            cursor: pointer;
+        }
+                /* Flash message hover effects */
+                .alert:hover {
+                    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
+                    opacity: 0.95;
+                }
+        
+        
+        
+        
+                .alert-fade-out {
+                    opacity: 0;
+                    transition: opacity 0.5s ease;
+                }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        @keyframes fadeOut {
+            from { opacity: 1; }
+            to { opacity: 0; }
+        }
+        

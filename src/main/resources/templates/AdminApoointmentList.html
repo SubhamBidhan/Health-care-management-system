@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Dashboard - Smart Healthcare System</title>
+    <link rel="stylesheet" href="" th:href="@{/css/userDashboard.css}"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"> <!-- Font Awesome for icons -->
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+
+        .dashboard-container {
+            display: flex;
+        }
+
+        .sidebar {
+            background-color: #2c3e50;
+            color: #ecf0f1;
+            width: 250px;
+            height: 100vh;
+            padding: 20px;
+        }
+
+        .sidebar .logo {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .sidebar img {
+            width: 100px;
+        }
+
+        .sidebar nav ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .sidebar nav ul li {
+            margin: 15px 0;
+        }
+
+        .sidebar nav ul li a {
+            color: #ecf0f1;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+        }
+
+        .sidebar nav ul li a i {
+            margin-right: 10px;
+        }
+
+        .sidebar nav ul li a.active {
+            background-color: #3498db;
+            border-radius: 5px;
+            padding: 10px;
+        }
+
+        .main-content {
+            flex-grow: 1;
+            padding: 20px;
+        }
+
+        .main-content h1 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: #fff;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        table th, table td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        table th {
+            background-color: #3498db;
+            color: white;
+        }
+
+        table tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <aside class="sidebar">
+            <div class="logo">
+                <img src="/css/logo2.png" alt="Doctor Logo">
+            </div>
+            <nav>
+                <ul>
+                    <li><a th:href="@{/admin/dashboard}" ><i class="fas fa-tachometer-alt"></i>Dashboard</a></li>
+                    <li><a th:href="@{/admin/allusers}"><i class="fas fa-users"></i>Patients</a></li>
+                    <li><a th:href="@{/admin/allDoctors}"><i class="fas fa-user-md"></i>Doctors</a></li>
+                    <li><a th:href="@{/admin/AppointmentList}" class="active"><i class="fas fa-calendar-alt"></i>Appointments</a></li>
+                    <li><a th:href="@{/admin/changePassword}"><i class="fas fa-cogs"></i>Settings</a></li>
+                    <li><a href="/logout"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+                </ul>
+            </nav>
+        </aside>
+        <main class="main-content">
+            <h1>Doctor Appointment Summary</h1>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Doctor Name</th>
+                        <th>Appointments Received</th>
+                        <th>Appointments Completed</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="entry : ${appointmentCounts}">
+                        <td th:text="${entry.key.name}">Doctor Name</td>
+                        <td th:text="${entry.value['received']}">Appointments Received</td>
+                        <td th:text="${entry.value['completed']}">Appointments Completed</td>
+                    </tr>
+                </tbody>
+            </table>
+        </main>
+        
+    </div>
+    <script src="/js/dashboard.js"></script>
+</body>
+</html>
