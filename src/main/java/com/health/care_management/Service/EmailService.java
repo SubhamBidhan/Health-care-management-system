@@ -56,8 +56,8 @@ public class EmailService {
 
         // Set email recipient, subject, and sender
         helper.setTo(toEmail);
-        helper.setSubject("Appointment Request Received - Aditya TeleHealth Care");
-        helper.setFrom("am9982061@gmail.com");
+        helper.setSubject("Appointment Request Received - TeleHealth Care");
+        helper.setFrom("subhambidhansahoo09@gmail.com");
 
         // Email content with respectful and informative language
         String emailContent = "<p>Dear " + patientName + ",</p>" +
@@ -106,7 +106,7 @@ public class EmailService {
                 "<p><strong>Best regards,</strong><br>" +
                 "Aditya TeleHealth Care<br>" +
                 "Phone: +91-8114756133<br>" +
-                "Email: support@adityatelehealth.com</p>";
+                "Email: support@telehealth.com</p>";
 
         // Set email content as HTML
         helper.setText(emailContent, true);
@@ -143,7 +143,7 @@ public class EmailService {
                 "<p><strong>Best regards,</strong><br>" +
                 "Aditya TeleHealth Care<br>" +
                 "Phone: +91-8114756133<br>" +
-                "Email: support@adityatelehealth.com</p>" +
+                "Email: support@telehealth.com</p>" +
                 "<p><em>Note: Please do not share your prescription with anyone to ensure privacy and confidentiality.</em></p>";
 
         // Set email content as HTML
@@ -173,7 +173,7 @@ public class EmailService {
                 "<p><strong>Best regards,</strong><br>" +
                 "Aditya TeleHealth Care<br>" +
                 "Phone: +91-8114756133<br>" +
-                "Email: support@adityatelehealth.com</p>" +
+                "Email: support@telehealth.com</p>" +
                 "<p><em>Note: This OTP is confidential and should not be shared with anyone.</em></p>";
 
         helper.setText(emailContent, true);
@@ -197,7 +197,7 @@ public class EmailService {
                 "<p><strong>Best regards,</strong><br>" +
                 "Aditya TeleHealth Care<br>" +
                 "Phone: +91-8114756133<br>" +
-                "Email: support@adityatelehealth.com</p>" +
+                "Email: support@telehealth.com</p>" +
                 "<p><em>Note: This OTP is confidential and should not be shared with anyone.</em></p>";
     
         helper.setText(emailContent, true);
